@@ -1,0 +1,41 @@
+version: '3'
+
+services:
+  nginx:
+    build: ./nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ../:/var/www/genre/
+    depends_on:
+      - php
+
+  php:
+    build: ./php
+    depends_on:
+      - mysql
+    volumes:
+      - ../:/var/www/genre
+    expose:
+      - '9000'
+
+  mysql:
+    image: mysql:5.7.20
+    volumes:
+      - data-mysql:/var/lib/mysql
+    environment:
+       - MYSQL_DATABASE=genre
+       - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+    expose:
+      - '3306'
+      
+  python:
+    build: ./python
+    volumes:
+      - ../python/:/var/www/genre
+    expose:
+      - '5000'
+      
+volumes:
+  data-mysql: {}
