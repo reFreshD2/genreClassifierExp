@@ -9,7 +9,7 @@ class MusicMetrics:
         self.__avgAmp = None
         self.__rhythm = None
         self.__rate = None
-        self.__instruments = []
+        self.__instrumentsSoundsCharacter = []
         self.__musicForm = None
         self.__genre = None
         self.__spectralCentroid = None
@@ -51,3 +51,6 @@ class MusicMetrics:
 
     def setForm(self, value):
         self.__musicForm = value
+
+    def setInstumentsSoundCharacter(self, value):
+        self.__instrumentsSoundsCharacter = value

@@ -1,7 +1,7 @@
 from Domain.Entity.MusicMetrics import MusicMetrics
 from Domain.Builder.MetricsBuilder.SpectroMetricBuilder import SpectroMetricBuilder
 from Domain.Builder.MetricsBuilder.RhythmicMetricBuilder import RhythmicMetricBuilder
-from Domain.Builder.MetricsBuilder.MusicInstrumentsBuilder import MusicInstrumentsBuilder
+from Domain.Builder.MetricsBuilder.MusicInstrumentsSoundCharacterBuilder import MusicInstrumentsSoundCharacterBuilder
 from Domain.Builder.MetricsBuilder.SceptrogramBuilder import SpectrogramBuilder
 from Domain.Builder.MetricsBuilder.MusicFormBuilder import MusicFormBuilder
 import json
@@ -11,7 +11,7 @@ class MusicMetricsBuilder:
     __builders = [
         SpectroMetricBuilder(),
         RhythmicMetricBuilder(),
-        MusicInstrumentsBuilder(),
+        MusicInstrumentsSoundCharacterBuilder(),
         SpectrogramBuilder(),
         MusicFormBuilder()
     ]
