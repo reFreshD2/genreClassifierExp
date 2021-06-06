@@ -11,6 +11,6 @@ RUN apt-get update && apt-get install -y \
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
 
 RUN usermod -u 1000 www-data && mkdir /var/www/genre
-WORKDIR /var/www/myapp
+WORKDIR /var/www/genre
 
 CMD ["php-fpm"]

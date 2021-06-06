@@ -1,0 +1,9 @@
+show_main_page:
+  path: /
+  controller: 'Genre\Web\Controller\ShowMainPageAction'
+  methods: [GET]
+
+music_metrics:
+  path: /musicMetrics
+  controller: 'Genre\Web\Controller\MusicMetric\ShowMusicMetricAction'
+  methods: [GET]
