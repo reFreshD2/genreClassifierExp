@@ -1,0 +1,11 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Genre\Domain\Service\UploadService:
+    arguments:
+      - '%kernel.project_dir%/python/upload/'
+
+  Genre\Domain\Service\ParserService: ~

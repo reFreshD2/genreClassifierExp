@@ -14,3 +14,8 @@ doctrine:
                 type: annotation
                 dir: '%kernel.project_dir%/src/Domain/MusicMetrics/Entity'
                 prefix: 'Genre\Domain\MusicMetrics\Entity'
+            AudioFile:
+                is_bundle: false
+                type: annotation
+                dir: '%kernel.project_dir%/src/Domain/AudioFile/Entity'
+                prefix: 'Genre\Domain\AudioFile\Entity'

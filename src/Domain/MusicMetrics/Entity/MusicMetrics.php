@@ -2,8 +2,9 @@
 
 namespace Genre\Domain\MusicMetrics\Entity;
 
-use Genre\Repository\MusicMetricsRepository;
+use Genre\Domain\MusicMetrics\Repository\MusicMetricsRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Genre\Domain\AudioFile\Entity\AudioFile;
 
 /**
  * @ORM\Entity(repositoryClass=MusicMetricsRepository::class)
@@ -86,6 +87,11 @@ class MusicMetrics
      * @ORM\Column(type="string", length=255)
      */
     private $genre;
+
+    /**
+     * @ORM\OneToOne(targetEntity=AudioFile::class, inversedBy="musicMetrics", cascade={"remove"})
+     */
+    private $audioFile;
 
     public function getId(): ?int
     {
@@ -188,9 +194,9 @@ class MusicMetrics
         return $this;
     }
 
-    public function getInstrumentsSoundsCharacter(): ?array
+    public function getInstrumentsSoundsCharacter(): string
     {
-        return $this->instrumentsSoundsCharacter;
+        return implode(',' ,$this->instrumentsSoundsCharacter);
     }
 
     public function setInstrumentsSoundsCharacter(array $instrumentsSoundsCharacter): self
@@ -258,5 +264,15 @@ class MusicMetrics
         $this->genre = $genre;
 
         return $this;
+    }
+
+    public function getAudioFile(): ?AudioFile
+    {
+        return $this->audioFile;
+    }
+
+    public function setAudioFile(AudioFile $audioFile): void
+    {
+        $this->audioFile = $audioFile;
     }
 }

@@ -13,6 +13,8 @@ services:
 
   php:
     build: ./php
+    environment:
+      PHP_IDE_CONFIG: serverName=localhost
     depends_on:
       - mysql
     volumes:
@@ -29,13 +31,6 @@ services:
        - MYSQL_ALLOW_EMPTY_PASSWORD=yes
     expose:
       - '3306'
-      
-  python:
-    build: ./python
-    volumes:
-      - ../python/:/var/www/genre
-    expose:
-      - '5000'
-      
+
 volumes:
   data-mysql: {}

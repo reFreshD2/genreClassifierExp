@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Музыкальные характеристики{% endblock %}
+
+{% block body %}
+    <table border="2">
+        <thead>
+        <tr>
+            <th>№</th>
+            <th>Минимальная чатстота</th>
+            <th>Максимальная частота</th>
+            <th>Средняя частота</th>
+            <th>Минимальная амплитуда</th>
+            <th>Максимальная амплитуда</th>
+            <th>Средняя амплитуда</th>
+            <th>Ритм</th>
+            <th>Темп</th>
+            <th>Характеристики звука инструментов</th>
+            <th>Музыкальная форма</th>
+            <th>Спектральный центроид</th>
+            <th>Спектральный спад</th>
+            <th>Спектральная ширина</th>
+            <th>Жанр</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for record in records %}
+            <tr>
+                <td>{{ record.id }}</td>
+                <td>{{ record.minFreq }}</td>
+                <td>{{ record.maxFreq }}</td>
+                <td>{{ record.avgFreq }}</td>
+                <td>{{ record.minAmp }}</td>
+                <td>{{ record.maxAmp }}</td>
+                <td>{{ record.avgAmp }}</td>
+                <td>
+                    {{ record.rhythm == 1 ? 'Пунктирный' : 'Синкопа' }}
+                </td>
+                <td>
+                    {{
+                        record.rate == 0 ? 'Неопределенный' :
+                            (record.rate == 1 ? 'Медленный' :
+                                (record.rate == 2 ? 'Умеренный' :
+                                    (record.rate == 3 ? 'Оживленный' : 'Быстрый')
+                                )
+                            )
+                    }}
+                </td>
+                <td>{{ record.instrumentsSoundsCharacter }}</td>
+                <td>{{ record.musicForm }}</td>
+                <td>{{ record.spectralCentroid }}</td>
+                <td>{{ record.spectralRollOf }}</td>
+                <td>{{ record.spectralBandWidth }}</td>
+                <td>{{ record.genre }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Нет записей</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <form method="post" enctype="multipart/form-data" name="uploader" action="/upload">
+        <input type="file" name="audio[]" multiple>
+        <label>Название жанра:
+            <input type="text" name="genre" required>
+        </label>
+        <input type="submit" name="submit" value="Загрузить">
+    </form>
+{% endblock %}

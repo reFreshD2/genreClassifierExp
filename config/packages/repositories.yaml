@@ -1,0 +1,8 @@
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  Genre\Domain\MusicMetrics\Repository\MusicMetricsRepository: ~
+  Genre\Domain\AudioFile\Repository\AudioFileRepository: ~

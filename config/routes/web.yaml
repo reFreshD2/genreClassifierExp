@@ -5,5 +5,10 @@ show_main_page:
 
 music_metrics:
   path: /musicMetrics
-  controller: 'Genre\Web\Controller\MusicMetric\ShowMusicMetricAction'
+  controller: 'Genre\Web\Controller\MusicMetrics\ShowMusicMetricsAction'
   methods: [GET]
+
+upload:
+  path: /upload
+  controller: 'Genre\Web\Controller\MusicMetrics\UploadAction'
+  methods: [POST]

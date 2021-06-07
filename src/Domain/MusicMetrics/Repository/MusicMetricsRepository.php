@@ -2,6 +2,9 @@
 
 namespace Genre\Domain\MusicMetrics\Repository;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
 use Genre\Domain\MusicMetrics\Entity\MusicMetrics;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,37 +17,36 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MusicMetricsRepository extends ServiceEntityRepository
 {
+    private EntityManagerInterface $entityManager;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, MusicMetrics::class);
+        $this->entityManager = $this->getEntityManager();
     }
 
-    // /**
-    //  * @return MusicMetrics[] Returns an array of MusicMetrics objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @throws OptimisticLockException
+     * @throws ORMException
+     */
+    public function save(MusicMetrics $musicMetrics): void
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
+        $this->entityManager->persist($musicMetrics);
+        $this->entityManager->flush();
     }
-    */
 
-    /*
-    public function findOneBySomeField($value): ?MusicMetrics
+    public function getView(): array
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
+        $firstRecords = $this->createQueryBuilder('mm')
+            ->addOrderBy('mm.id','ASC')
+            ->setMaxResults(5)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getArrayResult();
+        $lastRecords = $this->createQueryBuilder('mm')
+            ->addOrderBy('mm.id','DESC')
+            ->setMaxResults(5)
+            ->getQuery()
+            ->getArrayResult();
+        return array_merge($firstRecords, $lastRecords);
     }
-    */
 }

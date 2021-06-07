@@ -5,3 +5,5 @@ services:
     public: true
 
   Genre\Web\Controller\ShowMainPageAction: ~
+  Genre\Web\Controller\MusicMetrics\ShowMusicMetricsAction: ~
+  Genre\Web\Controller\MusicMetrics\UploadAction: ~
