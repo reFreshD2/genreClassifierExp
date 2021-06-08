@@ -49,12 +49,12 @@ class MusicMetrics
     private $avgAmp;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $rhythm;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="string", length=255)
      */
     private $rate;
 
@@ -84,12 +84,13 @@ class MusicMetrics
     private $spectralBandWidth;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, nullable=true)
+     *
      */
     private $genre;
 
     /**
-     * @ORM\OneToOne(targetEntity=AudioFile::class, inversedBy="musicMetrics", cascade={"remove"})
+     * @ORM\OneToOne(targetEntity=AudioFile::class, mappedBy="musicMetrics", cascade={"remove"})
      */
     private $audioFile;
 
@@ -170,24 +171,24 @@ class MusicMetrics
         return $this;
     }
 
-    public function getRhythm(): ?int
+    public function getRhythm(): ?string
     {
         return $this->rhythm;
     }
 
-    public function setRhythm(int $rhythm): self
+    public function setRhythm(string $rhythm): self
     {
         $this->rhythm = $rhythm;
 
         return $this;
     }
 
-    public function getRate(): ?int
+    public function getRate(): ?string
     {
         return $this->rate;
     }
 
-    public function setRate(int $rate): self
+    public function setRate(string $rate): self
     {
         $this->rate = $rate;
 
@@ -274,5 +275,25 @@ class MusicMetrics
     public function setAudioFile(AudioFile $audioFile): void
     {
         $this->audioFile = $audioFile;
+    }
+
+    public static function createFromArray(array $array): MusicMetrics {
+        $musicMetrics = new self();
+
+        $musicMetrics->setMinFreq($array['_MusicMetrics__minFreq'] ?? 0);
+        $musicMetrics->setAvgFreq($array['_MusicMetrics__avgFreq'] ?? 0);
+        $musicMetrics->setMaxFreq($array['_MusicMetrics__maxFreq'] ?? 0);
+        $musicMetrics->setMinAmp($array['_MusicMetrics__minAmp'] ?? 0);
+        $musicMetrics->setMaxAmp($array['_MusicMetrics__maxAmp'] ?? 0);
+        $musicMetrics->setAvgAmp($array['_MusicMetrics__avgAmp'] ?? 0);
+        $musicMetrics->setRhythm($array['_MusicMetrics__rhythm'] ?? 'Неопределенный');
+        $musicMetrics->setRate($array['_MusicMetrics__rate'] ?? 'Неопределенный');
+        $musicMetrics->setInstrumentsSoundsCharacter($array['_MusicMetrics__instrumentsSoundsCharacter']);
+        $musicMetrics->setMusicForm($array['_MusicMetrics__musicForm'] ?? 'A');
+        $musicMetrics->setSpectralCentroid($array['_MusicMetrics__spectralCentroid'] ?? 0);
+        $musicMetrics->setSpectralRollOf($array['_MusicMetrics__spectralRollOf'] ?? 0);
+        $musicMetrics->setSpectralBandWidth($array['_MusicMetrics__spectralBandWidth'] ?? 0);
+
+        return $musicMetrics;
     }
 }

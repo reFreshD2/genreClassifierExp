@@ -1,5 +1,7 @@
 FROM php:7.4-fpm
 
+RUN echo 'root:12345' | chpasswd
+
 RUN apt-get update && apt-get install -y \
         libpq-dev \
         zlib1g-dev \
@@ -12,7 +14,14 @@ RUN apt-get update && apt-get install -y \
         libffi-dev \
         python3-dev \
         build-essential \
-        && docker-php-ext-install pdo pdo_mysql
+        libsndfile1 \
+        && docker-php-ext-install pdo pdo_mysql \
+        && pip3 install --upgrade pip \
+        && pip3 install llvmlite \
+        librosa
+
+RUN mkdir -m 777 /tmp/numba_cache
+ENV NUMBA_CACHE_DIR=/tmp/numba_cache/
 
 COPY --from=composer:1.10 /usr/bin/composer /usr/bin/composer
 

@@ -4,17 +4,17 @@ from Domain.Builder.MetricsBuilder.DTO.FreqUsingDTO import FreqUsingDTO
 
 class MusicInstrumentsSoundCharacterBuilder(IMusicMetricsBuilder):
     SOUND_CHARACTER = {
-        'BUZZ': [20, 30],
-        'BOTTOM': [60, 80],
-        'FULLNESS': [80, 120],
-        'TURBIDITY': [120, 200],
-        'HEAT': [200, 400],
-        'DENSITY': [500, 900],
-        'SONORITY': [1000, 2000],
-        'CLARITY': [2000, 2500],
-        'PRESENCE': [2500, 5000],
-        'SHARPNESS': [5000, 7500],
-        'HISS': [8000, 12000]
+        'Гул': [20, 30],
+        'Низ': [60, 80],
+        'Полнота': [80, 120],
+        'Мутность': [120, 200],
+        'Теплота': [200, 400],
+        'Плотность': [500, 900],
+        'Звонкость': [1000, 2000],
+        'Ясность': [2000, 2500],
+        'Присутствие': [2500, 5000],
+        'Резкость': [5000, 7500],
+        'Шиперние': [8000, 12000]
     }
 
     def __getFreq(self, container, finding):

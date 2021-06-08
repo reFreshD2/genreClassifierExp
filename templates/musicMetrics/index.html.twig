@@ -33,20 +33,13 @@
                 <td>{{ record.minAmp }}</td>
                 <td>{{ record.maxAmp }}</td>
                 <td>{{ record.avgAmp }}</td>
+                <td>{{ record.rhythm }}</td>
+                <td>{{ record.rate }}</td>
                 <td>
-                    {{ record.rhythm == 1 ? 'Пунктирный' : 'Синкопа' }}
+                    {% for key, value in record.instrumentsSoundsCharacter %}
+                        "{{ key }}" : {{ value }}
+                    {% endfor %}
                 </td>
-                <td>
-                    {{
-                        record.rate == 0 ? 'Неопределенный' :
-                            (record.rate == 1 ? 'Медленный' :
-                                (record.rate == 2 ? 'Умеренный' :
-                                    (record.rate == 3 ? 'Оживленный' : 'Быстрый')
-                                )
-                            )
-                    }}
-                </td>
-                <td>{{ record.instrumentsSoundsCharacter }}</td>
                 <td>{{ record.musicForm }}</td>
                 <td>{{ record.spectralCentroid }}</td>
                 <td>{{ record.spectralRollOf }}</td>

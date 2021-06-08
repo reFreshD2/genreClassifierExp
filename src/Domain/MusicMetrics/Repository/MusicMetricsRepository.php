@@ -37,16 +37,22 @@ class MusicMetricsRepository extends ServiceEntityRepository
 
     public function getView(): array
     {
-        $firstRecords = $this->createQueryBuilder('mm')
-            ->addOrderBy('mm.id','ASC')
-            ->setMaxResults(5)
-            ->getQuery()
-            ->getArrayResult();
-        $lastRecords = $this->createQueryBuilder('mm')
-            ->addOrderBy('mm.id','DESC')
-            ->setMaxResults(5)
-            ->getQuery()
-            ->getArrayResult();
-        return array_merge($firstRecords, $lastRecords);
+        $count = count($this->findAll());
+        if ($count > 10) {
+            $firstRecord = $this->createQueryBuilder('mm')
+                ->addOrderBy('mm.id', 'ASC')
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getArrayResult();
+            $lastRecord = $this->createQueryBuilder('mm')
+                ->addOrderBy('mm.id', 'ASC')
+                ->setMaxResults(5)
+                ->setFirstResult($count - 5)
+                ->getQuery()
+                ->getArrayResult();
+            return array_merge($firstRecord, $lastRecord);
+        }
+
+        return $this->findAll();
     }
 }

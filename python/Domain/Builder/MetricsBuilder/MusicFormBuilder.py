@@ -28,7 +28,7 @@ class MusicFormBuilder(IMusicMetricsBuilder):
                 marks[i] = findingGroup
                 i += 1
                 sameFreqIndex += 1
-                while freq[i] == freq[sameFreqIndex]:
+                while i < len(freq) and sameFreqIndex < len(freq) and freq[i] == freq[sameFreqIndex]:
                     marks[i] = findingGroup
                     marks[sameFreqIndex] = findingGroup
                     i += 1
