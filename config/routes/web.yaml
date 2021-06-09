@@ -12,3 +12,13 @@ upload:
   path: /upload
   controller: 'Genre\Web\Controller\MusicMetrics\UploadAction'
   methods: [POST]
+
+experiment:
+  path: /experiment
+  controller: 'Genre\Web\Controller\Experiment\ShowExperimentAction'
+  methods: [GET]
+
+experiment_result:
+  path: /experiment/result
+  controller: 'Genre\Web\Controller\Experiment\ShowExperimentResultAction'
+  methods: [POST]

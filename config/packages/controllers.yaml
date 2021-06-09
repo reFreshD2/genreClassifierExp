@@ -7,3 +7,5 @@ services:
   Genre\Web\Controller\ShowMainPageAction: ~
   Genre\Web\Controller\MusicMetrics\ShowMusicMetricsAction: ~
   Genre\Web\Controller\MusicMetrics\UploadAction: ~
+  Genre\Web\Controller\Experiment\ShowExperimentAction: ~
+  Genre\Web\Controller\Experiment\ShowExperimentResultAction: ~

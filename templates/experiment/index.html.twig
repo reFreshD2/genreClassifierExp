@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Эксперименты{% endblock %}
+
+{% block body %}
+    <form action="/experiment/result" method="post">
+        <div>
+            <label>Метод классификации
+                <select id="method" required>
+                    <option selected disabled>Выберите метод классификации</option>
+                    <option name="KNeighbors">Метод ближайшего соседа</option>
+                </select>
+            </label>
+            <input id="hiddenMethod" hidden name="method" value="">
+        </div>
+        <div>
+            <label>Рандомное распределение
+                <input type="checkbox" name="random" id="random">
+            </label>
+            <label>Равномерное распределение
+                <input type="checkbox" name="equable" id="equable" checked>
+            </label>
+        </div>
+        <div>
+            <label>Размер обучающей выборки (в процентах)
+                <input type="number" name="count" required min="60" max="80" title="Возможные значения 60-80%">
+            </label>
+        </div>
+        <div>
+            <input type="submit" value="Провести эксперимент">
+        </div>
+    </form>
+    <script src="/assets/js/experiment.js"></script>
+{% endblock %}

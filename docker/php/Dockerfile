@@ -18,7 +18,9 @@ RUN apt-get update && apt-get install -y \
         && docker-php-ext-install pdo pdo_mysql \
         && pip3 install --upgrade pip \
         && pip3 install llvmlite \
-        librosa
+        librosa \
+        mysql-connector-python~=8.0.25 \
+        pandas~=1.2.4
 
 RUN mkdir -m 777 /tmp/numba_cache
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache/
