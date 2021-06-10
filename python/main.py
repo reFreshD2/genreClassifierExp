@@ -7,7 +7,7 @@ from Application.Experimenter import Experimenter
 scrypt, uri, params = argv
 if uri == 'parse':
     parser = Parser()
-    print(Parser.parse(parser, params))
+    print(parser.parse(params))
 elif uri == 'experiment':
     experimenter = Experimenter()
-    print(Experimenter.handle(experimenter, params))
+    print(experimenter.handle(params))
