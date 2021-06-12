@@ -6,6 +6,25 @@ from matplotlib import pyplot as plt
 
 class GraphUtil:
 
+    def getAxis(self, experiments, xName):
+        x = []
+        yPrecision = []
+        yRecall = []
+        for i in range(0, len(experiments)):
+            x.append(experiments.get(i).get('params').get(xName))
+            yPrecision.append(experiments.get(i).get('quality').get('Средняя точность'))
+            yRecall.append(experiments.get(i).get('quality').get('Средняя полнота'))
+        return {
+            'Точность': {
+                'x': x,
+                'y': yPrecision
+            },
+            'Полнота': {
+                'x': x,
+                'y': yRecall
+            }
+        }
+
     def getGraph(self, title, axisX, axisY, labelX, labelY):
         image = io.BytesIO()
         plt.plot(axisX, axisY, linewidth=2)

@@ -9,25 +9,6 @@ class KNeighborsExperiment:
     __qualityUtil = None
     __graphUtil = None
 
-    def __getAxis(self, experiments):
-        x = []
-        yPrecision = []
-        yRecall = []
-        for i in range(0, len(experiments)):
-            x.append(experiments.get(i).get('params').get('k'))
-            yPrecision.append(experiments.get(i).get('quality').get('Средняя точность'))
-            yRecall.append(experiments.get(i).get('quality').get('Средняя полнота'))
-        return {
-            'Точность': {
-                'x': x,
-                'y': yPrecision
-            },
-            'Полнота': {
-                'x': x,
-                'y': yRecall
-            }
-        }
-
     def __init__(self):
         self.__qualityUtil = QualityUtil()
         self.__graphUtil = GraphUtil()
@@ -43,7 +24,7 @@ class KNeighborsExperiment:
     def getResult(self, trainX, testX, trainY, testY):
         if self.__k is not None:
             model = KNeighborsClassifier(n_neighbors=self.__k)
-            model.fit(trainX, trainY)
+            model.fit(trainX, trainY.values.ravel())
             predict = model.predict(testX)
             quality = self.__qualityUtil.getQuality(testY, predict)
             params = {
@@ -68,9 +49,9 @@ class KNeighborsExperiment:
                 'quality': quality,
                 'train': model.score(trainX, trainY)
             }
-            experiments[i-1] = result
+            experiments[i - 1] = result
         bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
-        axis = self.__getAxis(experiments)
+        axis = self.__graphUtil.getAxis(experiments, 'k')
         graphs = {
             '0': self.__graphUtil.getGraph(
                 'Измение точности от k',
