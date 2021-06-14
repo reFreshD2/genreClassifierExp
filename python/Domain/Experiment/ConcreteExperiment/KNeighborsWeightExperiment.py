@@ -53,7 +53,8 @@ class KNeighborsWeightExperiment:
             }
             result = {
                 'params': params,
-                'quality': quality
+                'quality': quality,
+                'test': model.score(trainX, trainY)
             }
             return json.dumps(result)
         elif self.__weight is not None:
@@ -79,20 +80,10 @@ class KNeighborsWeightExperiment:
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'k')
             graphs = {
-                '0': self.__graphUtil.getGraph(
-                    'Измение точности от k',
-                    axis.get('Точность').get('x'),
-                    axis.get('Точность').get('y'),
-                    'k',
-                    'Точность'
-                ),
-                '1': self.__graphUtil.getGraph(
-                    'Измение полноты от k',
-                    axis.get('Полнота').get('x'),
-                    axis.get('Полнота').get('y'),
-                    'k',
-                    'Полнота'
-                )
+                self.__graphUtil.getLinePlot('Измение точности от k', axis.get('Точность').get('x'),
+                                             axis.get('Точность').get('y'), 'k', 'Точность'),
+                self.__graphUtil.getLinePlot('Измение полноты от k', axis.get('Полнота').get('x'),
+                                             axis.get('Полнота').get('y'), 'k', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -126,8 +117,8 @@ class KNeighborsWeightExperiment:
             'exp': self.__exp
         }
         allExperiments = {}
+        bestExperiments = {}
         k = 0
-        graphs = {}
         for name, func in weightFunc.items():
             experiments = {}
             for i in range(1, len(trainX)):
@@ -145,23 +136,18 @@ class KNeighborsWeightExperiment:
                     'train': model.score(trainX, trainY)
                 }
                 experiments[i - 1] = result
-            allExperiments[k] = self.__qualityUtil.getBestQualityExperiment(experiments)
-            axis = self.__graphUtil.getAxis(experiments, 'k')
-            graphs[k * 2] = self.__graphUtil.getGraph(
-                'Измение точности от k при функции весов ' + name,
-                axis.get('Точность').get('x'),
-                axis.get('Точность').get('y'),
-                'k',
-                'Точность'
-            )
-            graphs[k * 2 + 1] = self.__graphUtil.getGraph(
-                'Измение полноты от k при функции весов ' + name,
-                axis.get('Полнота').get('x'),
-                axis.get('Полнота').get('y'),
-                'k',
-                'Полнота'
-            )
+            bestExperiments[k] = self.__qualityUtil.getBestQualityExperiment(experiments)
+            allExperiments[k] = experiments
             k += 1
-        bestResult = self.__qualityUtil.getBestQualityExperiment(allExperiments)
+        bestResult = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
+        bestWeight = bestResult.get('params').get('weight')
+        invertMap = {v: k for k, v in weightFunc.items()}
+        axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestWeight)), 'k')
+        graphs = {
+            self.__graphUtil.getLinePlot('Измение точности от k при функции весов ' + bestWeight,
+                                         axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'k', 'Точность'),
+            self.__graphUtil.getLinePlot('Измение полноты от k при функции весов ' + bestWeight,
+                                         axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'k', 'Полнота')
+        }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)

@@ -32,7 +32,8 @@ class KNeighborsExperiment:
             }
             result = {
                 'params': params,
-                'quality': quality
+                'quality': quality,
+                'train': model.score(trainX, trainY)
             }
             return json.dumps(result)
         experiments = {}
@@ -53,20 +54,10 @@ class KNeighborsExperiment:
         bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
         axis = self.__graphUtil.getAxis(experiments, 'k')
         graphs = {
-            '0': self.__graphUtil.getGraph(
-                'Измение точности от k',
-                axis.get('Точность').get('x'),
-                axis.get('Точность').get('y'),
-                'k',
-                'Точность'
-            ),
-            '1': self.__graphUtil.getGraph(
-                'Измение полноты от k',
-                axis.get('Полнота').get('x'),
-                axis.get('Полнота').get('y'),
-                'k',
-                'Полнота'
-            )
+            self.__graphUtil.getLinePlot('Измение точности от k', axis.get('Точность').get('x'),
+                                         axis.get('Точность').get('y'), 'k', 'Точность'),
+            self.__graphUtil.getLinePlot('Измение полноты от k', axis.get('Полнота').get('x'),
+                                         axis.get('Полнота').get('y'), 'k', 'Полнота')
         }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)

@@ -7,6 +7,9 @@ import json
 
 
 class ParzenExperiment:
+    H_RANGE_START = 0.01
+    H_RANGE_END = 2
+    H_RANGE_STEP = 0.01
     __h = None
     __qualityUtil = None
     __graphUtil = None
@@ -70,12 +73,13 @@ class ParzenExperiment:
             }
             result = {
                 'params': params,
-                'quality': quality
+                'quality': quality,
+                'train': model.score(trainX, trainY)
             }
             return json.dumps(result)
         elif self.__kernel is not None:
             experiments = {}
-            for i, h in enumerate(self.__range(0.01, 2, 0.01)):
+            for i, h in enumerate(self.__range(self.H_RANGE_START, self.H_RANGE_END, self.H_RANGE_STEP)):
                 kernelFunc = kernel.get(self.__kernel)
                 model = KNeighborsClassifier(n_neighbors=len(trainX), weights=lambda x: kernelFunc(x, h))
                 model.fit(trainX, trainY.values.ravel())
@@ -94,20 +98,10 @@ class ParzenExperiment:
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'h')
             graphs = {
-                '0': self.__graphUtil.getGraph(
-                    'Измение точности от h',
-                    axis.get('Точность').get('x'),
-                    axis.get('Точность').get('y'),
-                    'h',
-                    'Точность'
-                ),
-                '1': self.__graphUtil.getGraph(
-                    'Измение полноты от h',
-                    axis.get('Полнота').get('x'),
-                    axis.get('Полнота').get('y'),
-                    'h',
-                    'Полнота'
-                )
+                0: self.__graphUtil.getLinePlot('Измение точности от h', axis.get('Точность').get('x'),
+                                                axis.get('Точность').get('y'), 'h', 'Точность'),
+                1: self.__graphUtil.getLinePlot('Измение полноты от h', axis.get('Полнота').get('x'),
+                                                axis.get('Полнота').get('y'), 'h', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -131,13 +125,21 @@ class ParzenExperiment:
                 experiments[i] = result
                 i += 1
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
+            axis = self.__graphUtil.getAxis(experiments, 'kernel')
+            graphs = {
+                0: self.__graphUtil.getBarPlot('Изменение точности от ядра', axis.get('Точность').get('x'),
+                                               axis.get('Точность').get('y'), 'Ядро', 'Точность'),
+                1: self.__graphUtil.getBarPlot('Изменение полноты от ядра', axis.get('Полнота').get('x'),
+                                               axis.get('Точность').get('y'), 'Ядро', 'Полнота'),
+            }
+            bestResult['graphs'] = graphs
             return json.dumps(bestResult)
         allExperiments = {}
+        bestExperiments = {}
         k = 0
-        graphs = {}
         for name, func in kernel.items():
             experiments = {}
-            for i, h in enumerate(self.__range(0.01, 2, 0.01)):
+            for i, h in enumerate(self.__range(self.H_RANGE_START, self.H_RANGE_END, self.H_RANGE_STEP)):
                 model = KNeighborsClassifier(n_neighbors=len(trainX), weights=lambda x: func(x, h))
                 model.fit(trainX, trainY.values.ravel())
                 predict = model.predict(testX)
@@ -152,23 +154,19 @@ class ParzenExperiment:
                     'train': model.score(trainX, trainY)
                 }
                 experiments[i] = result
-            allExperiments[k] = self.__qualityUtil.getBestQualityExperiment(experiments)
-            axis = self.__graphUtil.getAxis(experiments, 'h')
-            graphs[k * 2] = self.__graphUtil.getGraph(
-                'Измение точности от h при функции ядра ' + name,
-                axis.get('Точность').get('x'),
-                axis.get('Точность').get('y'),
-                'h',
-                'Точность'
-            )
-            graphs[k * 2 + 1] = self.__graphUtil.getGraph(
-                'Измение полноты от h при функции ядра ' + name,
-                axis.get('Полнота').get('x'),
-                axis.get('Полнота').get('y'),
-                'h',
-                'Полнота'
-            )
+            bestExperiments[k] = self.__qualityUtil.getBestQualityExperiment(experiments)
+            allExperiments[k] = experiments
             k += 1
-        bestResult = self.__qualityUtil.getBestQualityExperiment(allExperiments)
+        bestResult = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
+        bestKernel = bestResult.get('params').get('kernel')
+        invertMap = {v: k for k, v in kernel.items()}
+        axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestKernel)), 'h')
+        graphs = {
+            0: self.__graphUtil.getLinePlot('Измение точности от h при функции ядра ' + bestKernel,
+                                            axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'h',
+                                            'Точность'),
+            1: self.__graphUtil.getLinePlot('Измение полноты от h при функции ядра ' + bestKernel,
+                                            axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'h', 'Полнота')
+        }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)

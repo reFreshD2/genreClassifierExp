@@ -25,9 +25,20 @@ class GraphUtil:
             }
         }
 
-    def getGraph(self, title, axisX, axisY, labelX, labelY):
+    def getLinePlot(self, title, axisX, axisY, labelX, labelY):
         image = io.BytesIO()
         plt.plot(axisX, axisY, linewidth=2)
+        plt.xlabel(labelX)
+        plt.ylabel(labelY)
+        plt.title(title)
+        plt.savefig(image, format='jpg')
+        plt.close()
+        image.seek(0)
+        return base64.b64encode(image.read()).decode('utf-8')
+
+    def getBarPlot(self, title, names, axisY, labelX, labelY):
+        image = io.BytesIO()
+        plt.bar(names, axisY)
         plt.xlabel(labelX)
         plt.ylabel(labelY)
         plt.title(title)
