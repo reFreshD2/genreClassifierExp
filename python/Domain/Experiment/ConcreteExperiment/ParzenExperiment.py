@@ -14,6 +14,12 @@ class ParzenExperiment:
     __qualityUtil = None
     __graphUtil = None
     __kernel = None
+    __map = {
+        0: 'P',
+        1: 'T',
+        2: 'E',
+        3: 'Q',
+    }
 
     def __init__(self):
         self.__qualityUtil = QualityUtil()
@@ -76,6 +82,16 @@ class ParzenExperiment:
                 'quality': quality,
                 'train': model.score(trainX, trainY)
             }
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(quality)
+            graphs = {
+                0: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                1: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
+            }
+            result['graphs'] = graphs
             return json.dumps(result)
         elif self.__kernel is not None:
             experiments = {}
@@ -97,11 +113,18 @@ class ParzenExperiment:
                 experiments[i] = result
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'h')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                0: self.__graphUtil.getLinePlot('Измение точности от h', axis.get('Точность').get('x'),
-                                                axis.get('Точность').get('y'), 'h', 'Точность'),
+                0: self.__graphUtil.getLinePlot('Измение точности от h - ширина окна', axis.get('Точность').get('x'),
+                                                axis.get('Точность').get('y'), 'Ширина окна', 'Точность'),
                 1: self.__graphUtil.getLinePlot('Измение полноты от h', axis.get('Полнота').get('x'),
-                                                axis.get('Полнота').get('y'), 'h', 'Полнота')
+                                                axis.get('Полнота').get('y'), 'Ширина окна', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -126,11 +149,18 @@ class ParzenExperiment:
                 i += 1
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'kernel')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
                 0: self.__graphUtil.getBarPlot('Изменение точности от ядра', axis.get('Точность').get('x'),
                                                axis.get('Точность').get('y'), 'Ядро', 'Точность'),
                 1: self.__graphUtil.getBarPlot('Изменение полноты от ядра', axis.get('Полнота').get('x'),
                                                axis.get('Точность').get('y'), 'Ядро', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -159,14 +189,22 @@ class ParzenExperiment:
             k += 1
         bestResult = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
         bestKernel = bestResult.get('params').get('kernel')
-        invertMap = {v: k for k, v in kernel.items()}
+        invertMap = {v: k for k, v in self.__map.items()}
         axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestKernel)), 'h')
+        qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
         graphs = {
-            0: self.__graphUtil.getLinePlot('Измение точности от h при функции ядра ' + bestKernel,
-                                            axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'h',
+            0: self.__graphUtil.getLinePlot('Измение точности от h - ширина окна, при функции ядра ' + bestKernel,
+                                            axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'Ширина окна',
                                             'Точность'),
-            1: self.__graphUtil.getLinePlot('Измение полноты от h при функции ядра ' + bestKernel,
-                                            axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'h', 'Полнота')
+            1: self.__graphUtil.getLinePlot('Измение полноты от h - ширина окна, при функции ядра ' + bestKernel,
+                                            axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Ширина окна',
+                                            'Полнота'),
+            2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                           qualityGraphAxis.get('Точность').get('x'),
+                                           qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+            3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                           qualityGraphAxis.get('Полнота').get('x'),
+                                           qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
         }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)

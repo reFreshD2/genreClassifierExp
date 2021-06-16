@@ -29,7 +29,7 @@ class QualityUtil:
             sumRecall += recall
             quality = {
                 'Точность': precision,
-                'Полнопа': recall
+                'Полнота': recall
             }
             result[self.__dataSetUtil.getTargetName(i)] = quality
         result['Средняя точность'] = sumPrecision / matrix.shape[0]

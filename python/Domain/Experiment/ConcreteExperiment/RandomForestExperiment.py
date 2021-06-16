@@ -7,6 +7,8 @@ import json
 class RandomForestExperiment:
     N_ESTIMATORS_START = 2
     N_ESTIMATORS_END = 100
+    DEPTH_START = 1
+    DEPTH_END = 500
     __depth = None
     __qualityUtil = None
     __graphUtil = None
@@ -53,6 +55,16 @@ class RandomForestExperiment:
                 'quality': quality,
                 'train': model.score(trainX, trainY)
             }
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(quality)
+            graphs = {
+                0: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                1: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
+            }
+            result['graphs'] = graphs
             return json.dumps(result)
         elif self.__nEstimators is not None and self.__depth is not None:
             experiments = {}
@@ -80,6 +92,7 @@ class RandomForestExperiment:
                 experiments[i] = result
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'criteria')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
                 0: self.__graphUtil.getBarPlot('Изменение точности от критерия информативности',
                                                axis.get('Точность').get('x'), axis.get('Точность').get('y'),
@@ -87,6 +100,12 @@ class RandomForestExperiment:
                 1: self.__graphUtil.getBarPlot('Изменение полноты от критерия информативности',
                                                axis.get('Полнота').get('x'), axis.get('Точность').get('y'),
                                                'Критерий информативности', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -116,11 +135,19 @@ class RandomForestExperiment:
                 experiments[i - 2] = result
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'nEstimators')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                self.__graphUtil.getLinePlot('Измение точности от nEstimators', axis.get('Точность').get('x'),
-                                             axis.get('Точность').get('y'), 'nEstimators', 'Точность'),
-                self.__graphUtil.getLinePlot('Измение полноты от nEstimators', axis.get('Полнота').get('x'),
-                                             axis.get('Полнота').get('y'), 'nEstimators', 'Полнота')
+                0: self.__graphUtil.getLinePlot('Измение точности от nEstimators - количество деревьев',
+                                                axis.get('Точность').get('x'),
+                                                axis.get('Точность').get('y'), 'Количество деревьев', 'Точность'),
+                1: self.__graphUtil.getLinePlot('Измение полноты от nEstimators', axis.get('Полнота').get('x'),
+                                                axis.get('Полнота').get('y'), 'Количество деревьев', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -150,11 +177,20 @@ class RandomForestExperiment:
                 experiments[i - 1] = result
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'depth')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                self.__graphUtil.getLinePlot('Измение точности от depth', axis.get('Точность').get('x'),
-                                             axis.get('Точность').get('y'), 'depth', 'Точность'),
-                self.__graphUtil.getLinePlot('Измение полноты от depth', axis.get('Полнота').get('x'),
-                                             axis.get('Полнота').get('y'), 'depth', 'Полнота')
+                0: self.__graphUtil.getLinePlot('Измение точности от depth - глубина дерева',
+                                                axis.get('Точность').get('x'),
+                                                axis.get('Точность').get('y'), 'Глубина дерева', 'Точность'),
+                1: self.__graphUtil.getLinePlot('Измение полноты от depth - глубина дерева',
+                                                axis.get('Полнота').get('x'),
+                                                axis.get('Полнота').get('y'), 'Глубина дерева', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -191,13 +227,22 @@ class RandomForestExperiment:
             bestCriteria = bestResult.get('params').get('criteria')
             invertMap = {v: k for k, v in self.__map.items()}
             axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestCriteria)), 'depth')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                self.__graphUtil.getLinePlot('Измение точности от depth при критерии информативности ' + bestCriteria,
-                                             axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'depth',
-                                             'Точность'),
-                self.__graphUtil.getLinePlot('Измение полноты от depth при критерии информативности ' + bestCriteria,
-                                             axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'depth',
-                                             'Полнота')
+                0: self.__graphUtil.getLinePlot(
+                    'Измение точности от depth - глубина дерева, при критерии информативности ' + bestCriteria,
+                    axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'Глубина дерева',
+                    'Точность'),
+                1: self.__graphUtil.getLinePlot(
+                    'Измение полноты от depth - глубина дерева, при критерии информативности ' + bestCriteria,
+                    axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Глубина дерева',
+                    'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -234,13 +279,22 @@ class RandomForestExperiment:
             bestCriteria = bestResult.get('params').get('criteria')
             invertMap = {v: k for k, v in self.__map.items()}
             axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestCriteria)), 'nEstimators')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                self.__graphUtil.getLinePlot(
-                    'Измение точности от nEstimators при критерии информативности ' + bestCriteria,
-                    axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'nEstimators', 'Точность'),
-                self.__graphUtil.getLinePlot(
-                    'Измение полноты от nEstimators при критерии информативности ' + bestCriteria,
-                    axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'nEstimators', 'Полнота')
+                0: self.__graphUtil.getLinePlot(
+                    'Измение точности от nEstimators - количество деревьев, при критерии информативности '
+                    + bestCriteria,
+                    axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'Количество деревьев', 'Точность'),
+                1: self.__graphUtil.getLinePlot(
+                    'Измение полноты от nEstimators - количество деревьев, при критерии информативности '
+                    + bestCriteria,
+                    axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Количество деревьев', 'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
@@ -276,23 +330,33 @@ class RandomForestExperiment:
             bestResult = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
             bestDepth = bestResult.get('params').get('depth')
             axis = self.__graphUtil.getAxis(allExperiments.get(bestDepth - 1), 'nEstimators')
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
-                self.__graphUtil.getLinePlot('Измение точности от nEstimators при depth ' + bestDepth,
-                                             axis.get('Точность').get('x'), axis.get('Точность').get('y'),
-                                             'nEstimators', 'Точность'),
-                self.__graphUtil.getLinePlot('Измение полноты от nEstimators при depth ' + bestDepth,
-                                             axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'nEstimators',
-                                             'Полнота')
+                0: self.__graphUtil.getLinePlot(
+                    'Измение точности от nEstimators - количество деревьев, при глубине дереьев ' + bestDepth,
+                    axis.get('Точность').get('x'), axis.get('Точность').get('y'),
+                    'Количество дереьев', 'Точность'),
+                1: self.__graphUtil.getLinePlot(
+                    'Измение полноты от nEstimators - количество деревьев, при глубине дереьев ' + bestDepth,
+                    axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Количество деревьев',
+                    'Полнота'),
+                2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
             }
             bestResult['graphs'] = graphs
             return json.dumps(bestResult)
         allExperiments = {}
-        graphs = {}
+        experimentsForGraph = {}
         for i in range(0, len(self.__map)):
             bestExperiments = {}
-            for j in range(1, 500):
+            experimentsForGraphByEstimators = {}
+            for j in range(self.DEPTH_START, self.DEPTH_END):
                 experiments = {}
-                for k in range(2, 100):
+                for k in range(self.N_ESTIMATORS_START, self.N_ESTIMATORS_END):
                     model = RandomForestClassifier(
                         criterion=self.__map[i],
                         max_depth=j,
@@ -315,14 +379,32 @@ class RandomForestExperiment:
                     }
                     experiments[k - 2] = result
                 bestExperiments[j - 1] = self.__qualityUtil.getBestQualityExperiment(experiments)
-                axis = self.__graphUtil.getAxis(experiments, 'nEstimators')
-                graphs[(j - 1) * 2] = self.__graphUtil.getLinePlot(
-                    'Измение точности от nEstimators при depth %d и критерии %s'.format(j, self.__map[i]),
-                    axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'nEstimators', 'Точность')
-                graphs[(j - 1) * 2 + 1] = self.__graphUtil.getLinePlot(
-                    'Измение полноты от nEstimators при depth %d и критерии %s'.format(i, self.__map[i]),
-                    axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'nEstimators', 'Полнота')
+                experimentsForGraphByEstimators[j - 1] = experiments
             allExperiments[i] = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
+            bestExperimentIndex = allExperiments.get(i).get('params').get('depth')
+            experimentsForGraph[i] = experimentsForGraphByEstimators.get(bestExperimentIndex)
         bestResult = self.__qualityUtil.getBestQualityExperiment(allExperiments)
+        invertMap = {v: k for k, v in self.__map.items()}
+        bestCriteria = bestResult.get('params').get('criteria')
+        axis = self.__graphUtil.getAxis(allExperiments.get(invertMap.get(bestCriteria)), 'nEstimators')
+        qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
+        graphs = {
+            0: self.__graphUtil.getLinePlot(
+                'Измение точности от nEstimators - количество деревьев, при критерии информативности '
+                + bestCriteria
+                + ' и глубине дерева' + bestResult.get('params').get('depth'),
+                axis.get('Точность').get('x'), axis.get('Точность').get('y'), 'Количество деревьев', 'Точность'),
+            1: self.__graphUtil.getLinePlot(
+                'Измение точности от nEstimators - количество деревьев, при критерии информативности '
+                + bestCriteria
+                + ' и глубине дерева' + bestResult.get('params').get('depth'),
+                axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Количество деревьев', 'Полнота'),
+            2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                           qualityGraphAxis.get('Точность').get('x'),
+                                           qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+            3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                           qualityGraphAxis.get('Полнота').get('x'),
+                                           qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
+        }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)

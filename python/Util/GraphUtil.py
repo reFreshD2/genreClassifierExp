@@ -25,12 +25,32 @@ class GraphUtil:
             }
         }
 
+    def getQualityByGenre(self, quality):
+        x = []
+        yPrecision = []
+        yRecall = []
+        for qualityKey, qualityValue in quality.items():
+            if qualityKey != 'Средняя точность' and qualityKey != 'Средняя полнота':
+                x.append(qualityKey)
+                yPrecision.append(qualityValue.get('Точность'))
+                yRecall.append(qualityValue.get('Полнота'))
+        return {
+            'Точность': {
+                'x': x,
+                'y': yPrecision
+            },
+            'Полнота': {
+                'x': x,
+                'y': yRecall
+            }
+        }
+
     def getLinePlot(self, title, axisX, axisY, labelX, labelY):
         image = io.BytesIO()
         plt.plot(axisX, axisY, linewidth=2)
         plt.xlabel(labelX)
         plt.ylabel(labelY)
-        plt.title(title)
+        plt.title(title, fontsize=8)
         plt.savefig(image, format='jpg')
         plt.close()
         image.seek(0)
@@ -38,10 +58,13 @@ class GraphUtil:
 
     def getBarPlot(self, title, names, axisY, labelX, labelY):
         image = io.BytesIO()
-        plt.bar(names, axisY)
+        if labelX != 'Жанры':
+            plt.bar(names, axisY)
+        else:
+            plt.barh(names, axisY)
         plt.xlabel(labelX)
         plt.ylabel(labelY)
-        plt.title(title)
+        plt.title(title, fontsize=8)
         plt.savefig(image, format='jpg')
         plt.close()
         image.seek(0)

@@ -35,6 +35,16 @@ class KNeighborsExperiment:
                 'quality': quality,
                 'train': model.score(trainX, trainY)
             }
+            qualityGraphAxis = self.__graphUtil.getQualityByGenre(quality)
+            graphs = {
+                0: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                               qualityGraphAxis.get('Точность').get('x'),
+                                               qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+                1: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                               qualityGraphAxis.get('Полнота').get('x'),
+                                               qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
+            }
+            result['graphs'] = graphs
             return json.dumps(result)
         experiments = {}
         for i in range(1, len(trainX)):
@@ -53,11 +63,18 @@ class KNeighborsExperiment:
             experiments[i - 1] = result
         bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
         axis = self.__graphUtil.getAxis(experiments, 'k')
+        qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
         graphs = {
-            self.__graphUtil.getLinePlot('Измение точности от k', axis.get('Точность').get('x'),
-                                         axis.get('Точность').get('y'), 'k', 'Точность'),
-            self.__graphUtil.getLinePlot('Измение полноты от k', axis.get('Полнота').get('x'),
-                                         axis.get('Полнота').get('y'), 'k', 'Полнота')
+            0: self.__graphUtil.getLinePlot('Измение точности от k - количество соседей', axis.get('Точность').get('x'),
+                                            axis.get('Точность').get('y'), 'Количество соседей', 'Точность'),
+            1: self.__graphUtil.getLinePlot('Измение полноты от k - количество соседей', axis.get('Полнота').get('x'),
+                                            axis.get('Полнота').get('y'), 'Количество соседей', 'Полнота'),
+            2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',
+                                           qualityGraphAxis.get('Точность').get('x'),
+                                           qualityGraphAxis.get('Точность').get('y'), 'Жанры', 'Точность'),
+            3: self.__graphUtil.getBarPlot('Полнота классификации для каждого жанра',
+                                           qualityGraphAxis.get('Полнота').get('x'),
+                                           qualityGraphAxis.get('Полнота').get('y'), 'Жанры', 'Полнота')
         }
         bestResult['graphs'] = graphs
         return json.dumps(bestResult)
