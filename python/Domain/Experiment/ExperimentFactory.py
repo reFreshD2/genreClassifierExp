@@ -3,6 +3,8 @@ from Domain.Experiment.ConcreteExperiment.KNeighborsWeightExperiment import KNei
 from Domain.Experiment.ConcreteExperiment.ParzenExperiment import ParzenExperiment
 from Domain.Experiment.ConcreteExperiment.DecisionTreeExperiment import DecisionTreeExperiment
 from Domain.Experiment.ConcreteExperiment.RandomForestExperiment import RandomForestExperiment
+from Domain.Experiment.ConcreteExperiment.SVCExperiment import SVCExperiment
+from Domain.Experiment.ConcreteExperiment.SGDExperiment import SGDExperiment
 
 
 class ExperimentFactory:
@@ -11,7 +13,9 @@ class ExperimentFactory:
         'KNeighborsWeight': KNeighborsWeightExperiment(),
         'Parzen': ParzenExperiment(),
         'DecisionTree': DecisionTreeExperiment(),
-        'RandomForest': RandomForestExperiment()
+        'RandomForest': RandomForestExperiment(),
+        'SVC': SVCExperiment(),
+        'SGD': SGDExperiment()
     }
 
     def getExperiment(self, name, params):

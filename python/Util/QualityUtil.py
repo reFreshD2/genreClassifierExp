@@ -32,19 +32,19 @@ class QualityUtil:
                 'Полнота': recall
             }
             result[self.__dataSetUtil.getTargetName(i)] = quality
-        result['Средняя точность'] = sumPrecision / matrix.shape[0]
-        result['Средняя полнота'] = sumRecall / matrix.shape[0]
+        avgPrecision = sumPrecision / matrix.shape[0]
+        avgRecall = sumRecall / matrix.shape[0]
+        result['Средняя точность'] = avgPrecision
+        result['Средняя полнота'] = avgRecall
+        result['F-мера'] = 2 * avgRecall * avgPrecision / (avgRecall + avgPrecision)
         return result
 
     def getBestQualityExperiment(self, experiments):
         bestIndex = 0
-        bestPrecision = experiments.get(0).get('quality').get('Средняя точность')
-        bestRecall = experiments.get(0).get('quality').get('Средняя полнота')
+        bestQuality = experiments.get(0).get('quality').get('F-мера')
         for i in range(1, len(experiments)):
-            currentPrecision = experiments.get(i).get('quality').get('Средняя точность')
-            currentRecall = experiments.get(i).get('quality').get('Средняя полнота')
-            if bestPrecision < currentPrecision and bestRecall < currentRecall:
+            currentQuality = experiments.get(i).get('quality').get('F-мера')
+            if bestQuality < currentQuality:
                 bestIndex = i
-                bestPrecision = currentPrecision
-                bestRecall = currentRecall
+                bestQuality = currentQuality
         return experiments.get(bestIndex)

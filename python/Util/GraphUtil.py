@@ -30,7 +30,7 @@ class GraphUtil:
         yPrecision = []
         yRecall = []
         for qualityKey, qualityValue in quality.items():
-            if qualityKey != 'Средняя точность' and qualityKey != 'Средняя полнота':
+            if qualityKey != 'Средняя точность' and qualityKey != 'Средняя полнота' and qualityKey != 'F-мера':
                 x.append(qualityKey)
                 yPrecision.append(qualityValue.get('Точность'))
                 yRecall.append(qualityValue.get('Полнота'))
