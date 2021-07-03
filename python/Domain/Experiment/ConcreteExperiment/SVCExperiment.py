@@ -11,10 +11,10 @@ class SVCExperiment:
     __qualityUtil = None
     __graphUtil = None
     __map = {
-        # 0: 'linear',
-        # 0: 'poly',
-        0: 'rbf',
-        # 0: 'sigmoid',
+        0: 'linear',
+        1: 'poly',
+        2: 'rbf',
+        3: 'sigmoid',
     }
     __C = None
     __kernel = None

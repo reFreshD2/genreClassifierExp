@@ -10,4 +10,6 @@ if uri == 'parse':
     print(parser.parse(params))
 elif uri == 'experiment':
     experimenter = Experimenter()
-    print(experimenter.handle(params))
+    file = open(params)
+    json = file.read()
+    print(experimenter.handle(json))

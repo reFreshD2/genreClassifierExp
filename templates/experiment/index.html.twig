@@ -3,15 +3,24 @@
 {% block title %}Эксперименты{% endblock %}
 
 {% block body %}
-    <form action="/experiment/result" method="post">
+    <form action="{{ path('experiment_result') }}" method="post">
         <div>
             <label>Метод классификации
                 <select id="method" required>
                     <option selected disabled>Выберите метод классификации</option>
                     <option name="KNeighbors">Метод ближайшего соседа</option>
+                    <option name="KNeighborsWeight">Метод ближайшего соседа с убывающими весами</option>
+                    <option name="Parzen">Метод парзенова окна</option>
+                    <option name="DecisionTree">Бинарное решающее дерево</option>
+                    <option name="RandomForest">Решающие леса</option>
+                    <option name="SVC">Метод опорных векторов</option>
+                    <option name="SGD">Метод градиентного спуска</option>
                 </select>
             </label>
             <input id="hiddenMethod" hidden name="method" value="">
+        </div>
+        <div id="params">
+
         </div>
         <div>
             <label>Рандомное распределение
@@ -30,5 +39,6 @@
             <input type="submit" value="Провести эксперимент">
         </div>
     </form>
+    <a href="{{ path('show_main_page') }}">Назад</a>
     <script src="/assets/js/experiment.js"></script>
 {% endblock %}

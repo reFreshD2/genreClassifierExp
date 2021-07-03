@@ -3,6 +3,6 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block body %}
-    <a href="/musicMetrics">Музыкальные характеристики</a>
-    <a href="/experiment">Эксперименты</a>
+    <a href="{{ path('music_metrics') }}">Музыкальные характеристики</a>
+    <a href="{{ path('experiment') }}">Эксперименты</a>
 {% endblock %}

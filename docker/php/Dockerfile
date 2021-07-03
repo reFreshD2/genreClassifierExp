@@ -20,7 +20,8 @@ RUN apt-get update && apt-get install -y \
         && pip3 install llvmlite \
         librosa \
         mysql-connector-python~=8.0.25 \
-        pandas~=1.2.4
+        pandas~=1.2.4 \
+        matplotlib~=3.4.1
 
 RUN mkdir -m 777 /tmp/numba_cache
 ENV NUMBA_CACHE_DIR=/tmp/numba_cache/
@@ -41,6 +42,7 @@ RUN echo 'xdebug.remote_autostart=1' >> /usr/local/etc/php/php.ini && \
     echo 'xdebug.remote_port=9003' >> /usr/local/etc/php/php.ini && \
     echo 'xdebug.remote_enable=1' >> /usr/local/etc/php/php.ini && \
     echo 'post_max_size=32M' >> /usr/local/etc/php/php.ini && \
-    echo 'upload_max_filesize=32M' >> /usr/local/etc/php/php.ini
+    echo 'upload_max_filesize=32M' >> /usr/local/etc/php/php.ini \
+    echo 'max_execution_time= 300'
 
 CMD ["php-fpm"]

@@ -5,9 +5,9 @@ import json
 
 
 class RandomForestExperiment:
-    N_ESTIMATORS_START = 2
+    N_ESTIMATORS_START = 50
     N_ESTIMATORS_END = 100
-    DEPTH_START = 1
+    DEPTH_START = 400
     DEPTH_END = 500
     __depth = None
     __qualityUtil = None
@@ -132,7 +132,7 @@ class RandomForestExperiment:
                     'quality': quality,
                     'train': model.score(trainX, trainY)
                 }
-                experiments[i - 2] = result
+                experiments[i - self.N_ESTIMATORS_START] = result
             bestResult = self.__qualityUtil.getBestQualityExperiment(experiments)
             axis = self.__graphUtil.getAxis(experiments, 'nEstimators')
             qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
@@ -272,7 +272,7 @@ class RandomForestExperiment:
                         'quality': quality,
                         'train': model.score(trainX, trainY)
                     }
-                    experiments[j - 2] = result
+                    experiments[j - self.N_ESTIMATORS_START] = result
                 bestExperiments[i] = self.__qualityUtil.getBestQualityExperiment(experiments)
                 allExperiments = experiments
             bestResult = self.__qualityUtil.getBestQualityExperiment(allExperiments)
@@ -301,7 +301,7 @@ class RandomForestExperiment:
         elif self.__criteria is not None:
             allExperiments = {}
             bestExperiments = {}
-            for i in range(1, len(trainX)):
+            for i in range(self.DEPTH_START, self.DEPTH_END):
                 experiments = {}
                 for j in range(self.N_ESTIMATORS_START, self.N_ESTIMATORS_END):
                     model = RandomForestClassifier(
@@ -324,20 +324,20 @@ class RandomForestExperiment:
                         'quality': quality,
                         'train': model.score(trainX, trainY)
                     }
-                    experiments[j - 2] = result
-                bestExperiments[i - 1] = self.__qualityUtil.getBestQualityExperiment(experiments)
-                allExperiments[i - 1] = experiments
+                    experiments[j - self.N_ESTIMATORS_START] = result
+                bestExperiments[i - self.DEPTH_START] = self.__qualityUtil.getBestQualityExperiment(experiments)
+                allExperiments[i - self.DEPTH_START] = experiments
             bestResult = self.__qualityUtil.getBestQualityExperiment(bestExperiments)
             bestDepth = bestResult.get('params').get('depth')
-            axis = self.__graphUtil.getAxis(allExperiments.get(bestDepth - 1), 'nEstimators')
+            axis = self.__graphUtil.getAxis(allExperiments.get(bestDepth - self.DEPTH_START), 'nEstimators')
             qualityGraphAxis = self.__graphUtil.getQualityByGenre(bestResult.get('quality'))
             graphs = {
                 0: self.__graphUtil.getLinePlot(
-                    'Измение точности от nEstimators - количество деревьев, при глубине дереьев ' + bestDepth,
+                    'Измение точности от nEstimators - количество деревьев, при глубине дереьев {}'.format(bestDepth),
                     axis.get('Точность').get('x'), axis.get('Точность').get('y'),
                     'Количество дереьев', 'Точность'),
                 1: self.__graphUtil.getLinePlot(
-                    'Измение полноты от nEstimators - количество деревьев, при глубине дереьев ' + bestDepth,
+                    'Измение полноты от nEstimators - количество деревьев, при глубине дереьев {}'.format(bestDepth),
                     axis.get('Полнота').get('x'), axis.get('Полнота').get('y'), 'Количество деревьев',
                     'Полнота'),
                 2: self.__graphUtil.getBarPlot('Точность классификации для каждого жанра',

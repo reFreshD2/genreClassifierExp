@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Результат эксперимента{% endblock %}
+
+{% block body %}
+    <table border="2">
+        <thead>
+        <tr>
+            <th>Название</th>
+            <th>Точность</th>
+            <th>Полнота</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for qualityName, quality in result.quality %}
+            <tr>
+                <td>{{ qualityName }}</td>
+                <td>{{ quality['Точность'] }}</td>
+                <td>{{ quality['Полнота'] }}</td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">Нет записей</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    <div>
+        Качество обучения: {{ result.train }} <br>
+        F-мера: {{ result.Fscore }} <br>
+        Наилучшие параметры: <br>
+        {% for name, value in result.params %}
+            {{ name }} - {{ value }}<br>
+        {% endfor %}
+    </div>
+    {% for graph in result.graphs %}
+        <img alt="graph" src="data:image/png;base64, {{ graph }}">
+    {% endfor %}
+    <a href="{{ path('experiment') }}">Назад</a>
+{% endblock %}
