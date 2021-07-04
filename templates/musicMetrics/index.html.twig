@@ -3,6 +3,20 @@
 {% block title %}Музыкальные характеристики{% endblock %}
 
 {% block body %}
+    <form method="post" enctype="multipart/form-data" name="uploader" action="{{ path('upload') }}"
+          style="border: 1px solid #f1c40f; margin: 5px; width: 400px">
+        <div class="file-input">
+            <input type="file" name="audio[]" multiple accept=".wav" class="file" id="file" required>
+            <label for="file">Выберите файл</label>
+        </div>
+        <div class="genre-input">
+            <label>Название жанра:
+                <input type="text" name="genre" required>
+            </label>
+        </div>
+        <input type="submit" name="submit" value="Загрузить" class="upload">
+    </form>
+
     <table border="2">
         <thead>
         <tr>
@@ -54,12 +68,5 @@
         </tbody>
     </table>
 
-    <form method="post" enctype="multipart/form-data" name="uploader" action="{{ path('upload') }}">
-        <input type="file" name="audio[]" multiple>
-        <label>Название жанра:
-            <input type="text" name="genre" required>
-        </label>
-        <input type="submit" name="submit" value="Загрузить">
-    </form>
-    <a href="{{ path('show_main_page') }}">Назад</a>
+    <a href="{{ path('show_main_page') }}" class="double-border-button">Назад</a>
 {% endblock %}

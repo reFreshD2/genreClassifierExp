@@ -3,6 +3,8 @@
 {% block title %}Главная страница{% endblock %}
 
 {% block body %}
-    <a href="{{ path('music_metrics') }}">Музыкальные характеристики</a>
-    <a href="{{ path('experiment') }}">Эксперименты</a>
+    <div style="text-align: center; padding-top: 20%">
+        <a href="{{ path('music_metrics') }}" class="double-border-button">Музыкальные характеристики</a> <br>
+        <a href="{{ path('experiment') }}" class="double-border-button">Эксперименты</a>
+    </div>
 {% endblock %}
