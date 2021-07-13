@@ -17,6 +17,18 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class MusicMetricsRepository extends ServiceEntityRepository
 {
+    private const MAP = [
+        'рок' => [2, 101],
+        'регги' => [102, 200],
+        'поп' => [201, 298],
+        'метал' => [299, 390],
+        'джаз' => [391, 490],
+        'хип-хоп' => [491, 588],
+        'диско' => [589, 687],
+        'кантри' => [688, 787],
+        'классика' => [788, 887],
+        'блюз' => [888, 987],
+    ];
     private EntityManagerInterface $entityManager;
 
     public function __construct(ManagerRegistry $registry)
@@ -35,24 +47,48 @@ class MusicMetricsRepository extends ServiceEntityRepository
         $this->entityManager->flush();
     }
 
+    public function getGenre(): array
+    {
+        return $this->createQueryBuilder('mm')
+            ->select('mm.genre')
+            ->addGroupBy('mm.genre')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     public function getView(): array
     {
-        $count = count($this->findAll());
-        if ($count > 10) {
-            $firstRecord = $this->createQueryBuilder('mm')
-                ->addOrderBy('mm.id', 'ASC')
-                ->setMaxResults(5)
-                ->getQuery()
-                ->getArrayResult();
-            $lastRecord = $this->createQueryBuilder('mm')
-                ->addOrderBy('mm.id', 'ASC')
-                ->setMaxResults(5)
-                ->setFirstResult($count - 5)
-                ->getQuery()
-                ->getArrayResult();
-            return array_merge($firstRecord, $lastRecord);
-        }
-
-        return $this->findAll();
+//        $genres = $this->createQueryBuilder('mm')
+//            ->select('mm.genre')
+//            ->addGroupBy('mm.genre')
+//            ->getQuery()
+//            ->getArrayResult();
+//
+//        $musicMetrics = [];
+//        foreach ($genres as $genre) {
+//            $builder = $this->createQueryBuilder('mm');
+//            $genreMusicMetrics = $builder->andWhere($builder->expr()->eq('mm.genre', $genre['genre']))
+//                ->getQuery()
+//                ->getArrayResult();
+//            $musicMetrics = array_merge($musicMetrics, $genreMusicMetrics);
+//        }
+//
+//        return $musicMetrics;
+        $ids = [
+            random_int(self::MAP['рок'][0], self::MAP['рок'][1]),
+            random_int(self::MAP['регги'][0], self::MAP['регги'][1]),
+            random_int(self::MAP['поп'][0], self::MAP['поп'][1]),
+            random_int(self::MAP['метал'][0], self::MAP['метал'][1]),
+            random_int(self::MAP['джаз'][0], self::MAP['джаз'][1]),
+            random_int(self::MAP['хип-хоп'][0], self::MAP['хип-хоп'][1]),
+            random_int(self::MAP['диско'][0], self::MAP['диско'][1]),
+            random_int(self::MAP['кантри'][0], self::MAP['кантри'][1]),
+            random_int(self::MAP['классика'][0], self::MAP['классика'][1]),
+            random_int(self::MAP['блюз'][0], self::MAP['блюз'][1]),
+        ];
+        $builder = $this->createQueryBuilder('mm');
+        return $builder->andWhere($builder->expr()->in('mm.id', $ids))
+            ->getQuery()
+            ->getArrayResult();
     }
 }

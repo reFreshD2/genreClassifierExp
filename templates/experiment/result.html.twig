@@ -25,10 +25,10 @@
         {% endfor %}
         </tbody>
     </table>
-    <div>
-        Качество обучения: {{ result.train }} <br>
-        F-мера: {{ result.Fscore }} <br>
-        Наилучшие параметры: <br>
+    <div class="genre-input">
+        <label> Качество обучения: </label> {{ result.train }} <br>
+        <label> F-мера: </label> {{ result.Fscore }} <br>
+        <label> Наилучшие параметры: </label> <br>
         {% for name, value in result.params %}
             {{ name }} - {{ value }}<br>
         {% endfor %}
@@ -36,5 +36,7 @@
     {% for graph in result.graphs %}
         <img alt="graph" src="data:image/png;base64, {{ graph }}">
     {% endfor %}
-    <a href="{{ path('experiment') }}">Назад</a>
+    <div>
+        <a href="{{ path('experiment') }}" class="double-border-button">Назад</a>
+    </div>
 {% endblock %}

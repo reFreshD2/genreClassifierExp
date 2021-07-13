@@ -22,7 +22,12 @@ class ShowMusicMetricsAction
 
     public function __invoke(Request $request): Response
     {
-        $view = $this->musicMetricsRepository->getView();
-        return new Response($this->twig->render('musicMetrics/index.html.twig', ['records' => $view]));
+        $genres = $this->musicMetricsRepository->getGenre();
+        if (!$request->query->has('genre')) {
+            $view = $this->musicMetricsRepository->getView();
+        } else {
+            $view = $this->musicMetricsRepository->findBy(['genre' => $request->query->get('genre')]);
+        }
+        return new Response($this->twig->render('musicMetrics/index.html.twig', ['records' => $view, 'genres' => $genres]));
     }
 }

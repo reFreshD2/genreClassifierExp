@@ -4,7 +4,7 @@
 
 {% block body %}
     <form method="post" enctype="multipart/form-data" name="uploader" action="{{ path('upload') }}"
-          style="border: 1px solid #f1c40f; margin: 5px; width: 400px">
+          class="form-music">
         <div class="file-input">
             <input type="file" name="audio[]" multiple accept=".wav" class="file" id="file" required>
             <label for="file">Выберите файл</label>
@@ -15,6 +15,20 @@
             </label>
         </div>
         <input type="submit" name="submit" value="Загрузить" class="upload">
+    </form>
+
+    <form method="get" enctype="multipart/form-data" name="search" action="{{ path('music_metrics') }}"
+          class="form-music">
+        <div class="genre-input">
+            <label>Поиск по жанру:
+                <select name="genre" required>
+                    {% for genre in genres %}
+                        <option name="{{ genre.genre }}" value="{{ genre.genre }}">{{ genre.genre }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+        </div>
+        <input type="submit" name="submit" value="Найти" class="upload">
     </form>
 
     <table border="2">
@@ -50,9 +64,13 @@
                 <td>{{ record.rhythm }}</td>
                 <td>{{ record.rate }}</td>
                 <td>
-                    {% for key, value in record.instrumentsSoundsCharacter %}
-                        "{{ key }}" : {{ value }}
-                    {% endfor %}
+                    {% if record.instrumentsSoundsCharacter is iterable %}
+                        {% for key, value in record.instrumentsSoundsCharacter %}
+                            "{{ key }}" : {{ value }}
+                        {% endfor %}
+                    {% else %}
+                        {{ record.instrumentsSoundsCharacter }}
+                    {% endif %}
                 </td>
                 <td>{{ record.musicForm }}</td>
                 <td>{{ record.spectralCentroid }}</td>

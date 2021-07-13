@@ -3,8 +3,8 @@
 {% block title %}Эксперименты{% endblock %}
 
 {% block body %}
-    <form action="{{ path('experiment_result') }}" method="post">
-        <div>
+    <form action="{{ path('experiment_result') }}" method="post" class="form-exp">
+        <div class="genre-input">
             <label>Метод классификации
                 <select id="method" required>
                     <option selected disabled>Выберите метод классификации</option>
@@ -22,21 +22,23 @@
         <div id="params">
 
         </div>
-        <div>
-            <label>Рандомное распределение
-                <input type="checkbox" name="random" id="random">
-            </label>
-            <label>Равномерное распределение
-                <input type="checkbox" name="equable" id="equable" checked>
-            </label>
+        <div class="form_radio_group">
+            <div class="form_radio_group-item">
+                <input id="radio-1" type="radio" name="type" value="random" checked required>
+                <label for="radio-1">Рандомное распределение</label>
+            </div>
+            <div class="form_radio_group-item">
+                <input id="radio-2" type="radio" name="type" value="equable" required>
+                <label for="radio-2">Равномерное распределение</label>
+            </div>
         </div>
-        <div>
+        <div class="genre-input">
             <label>Размер обучающей выборки (в процентах)
                 <input type="number" name="count" required min="60" max="80" title="Возможные значения 60-80%">
             </label>
         </div>
         <div>
-            <input type="submit" value="Провести эксперимент">
+            <input type="submit" value="Провести эксперимент" class="upload">
         </div>
     </form>
     <a href="{{ path('show_main_page') }}" class="double-border-button">Назад</a>

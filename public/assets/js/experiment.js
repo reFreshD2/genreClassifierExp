@@ -102,6 +102,7 @@ function getHidden(name) {
 
 function getKNeighborsParams() {
     let div = document.createElement('div')
+    div.setAttribute('class', "genre-input")
     let number = getNumberInput('int', 'k', 'Параметр k - количество соседей')
     div.appendChild(number)
     return div
@@ -126,7 +127,10 @@ function getKneighborsWeightParams() {
         }
     }
     let newDiv = document.createElement('div')
-    newDiv.append(div, select, weight)
+    let divSelect = document.createElement('div')
+    divSelect.setAttribute('class', "genre-input")
+    divSelect.append(select)
+    newDiv.append(div, divSelect, weight)
     return newDiv
 }
 
@@ -158,8 +162,10 @@ function getParzenParams() {
         }
     }
     let divH = document.createElement('div')
+    divH.setAttribute('class', "genre-input")
     divH.append(h)
     let divSelect = document.createElement('div')
+    divSelect.setAttribute('class', "genre-input")
     divSelect.append(select)
     div.append(divH, divSelect, hidden)
     return div
@@ -186,6 +192,8 @@ function getDecisionTreeParams() {
     let div = document.createElement('div')
     let divDepth = document.createElement('div')
     let divSelect = document.createElement('div')
+    divDepth.setAttribute('class', "genre-input")
+    divSelect.setAttribute('class', "genre-input")
     divSelect.append(select)
     divDepth.append(depth)
     div.append(divDepth, divSelect, hidden)
@@ -196,6 +204,7 @@ function getRandomForestParams() {
     let divDecision = getDecisionTreeParams()
     let nEst = getNumberInput('int', 'nEstimators', 'Параметр nEstimators - количество деревьев')
     let div = document.createElement('div')
+    div.setAttribute('class', "genre-input")
     div.append(nEst)
     divDecision.append(div)
     return divDecision
@@ -230,6 +239,8 @@ function getSVCParams() {
     let div = document.createElement('div')
     let divC = document.createElement('div')
     let divSelect = document.createElement('div')
+    divC.setAttribute('class', "genre-input")
+    divSelect.setAttribute('class', "genre-input")
     divC.append(C)
     divSelect.append(select)
     div.append(divC, divSelect, kernel)
@@ -288,6 +299,8 @@ function getSGDParams() {
     let div = document.createElement('div')
     let divLoss = document.createElement('div')
     let divPenalty = document.createElement('div')
+    divLoss.setAttribute('class', "genre-input")
+    divPenalty.setAttribute('class', "genre-input")
     divLoss.append(selectLoss)
     divPenalty.append(selectPenalty)
     div.append(divLoss, divPenalty, loss, penalty)

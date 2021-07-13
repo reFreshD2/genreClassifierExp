@@ -9,13 +9,6 @@ class ExperimentService
     public function getExperimentResult(array $params): array
     {
         $params = array_filter($params);
-        if (isset($params['random'])) {
-            unset($params['random']);
-            $params['type'] = 'random';
-        } else {
-            unset($params['equable']);
-            $params['type'] = 'equable';
-        }
 
         $file = new \SplFileObject(self::PYTHON_PATH . 'params.json', "w");
         $file->fwrite(\json_encode($params));

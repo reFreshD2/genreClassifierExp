@@ -195,9 +195,9 @@ class MusicMetrics
         return $this;
     }
 
-    public function getInstrumentsSoundsCharacter(): string
+    public function getInstrumentsSoundsCharacter(): array
     {
-        return implode(',' ,$this->instrumentsSoundsCharacter);
+        return $this->instrumentsSoundsCharacter;
     }
 
     public function setInstrumentsSoundsCharacter(array $instrumentsSoundsCharacter): self

@@ -75,8 +75,8 @@ tbody tr:hover {
     transition: .4s;
 }
 
-input:hover + label,
-input:focus + label,
+.genre-input input:hover + label,
+.genre-input input:focus + label,
 .genre-input input:hover,
 .upload:hover {
     transform: scale(1.05);
@@ -86,17 +86,17 @@ input:focus + label,
     margin: 10px 20px;
 }
 
-.genre-input input {
+.genre-input input, select {
     border: 2px solid #f1c40f;
     color: #f1c40f;
     background: #1b2631;
     height: 25px;
-    padding-left: 10px;
+    padding-left: 1px;
     transition: .4s;
-    margin-left: 5px;
+    margin-left: 8px;
 }
 
-.genre-input input:hover {
+.genre-input input:hover, select:hover {
     transform: scale(1.05);
 }
 
@@ -112,4 +112,62 @@ input:focus + label,
     margin: 10px 20px;
     height: 25px;
     transition: .4s;
+}
+
+.form-music {
+    border: 1px solid #f1c40f;
+    margin: 5px;
+    width: 400px
+}
+
+.form-exp {
+    border: 1px solid #f1c40f;
+    margin: 5px;
+    width: 600px;
+}
+
+.genre-input input:focus, .genre-input select:focus {
+    outline-color: #f1c40f;
+}
+
+.form_radio_group {
+    position: relative;
+    overflow: hidden;
+    margin-left: 20px;
+}
+.form_radio_group-item {
+    display: inline-block;
+    float: left;
+}
+.form_radio_group input[type=radio] {
+    display: none;
+}
+.form_radio_group label {
+    color: #f1c40f;
+    display: inline-block;
+    cursor: pointer;
+    padding: 0px 5px;
+    line-height: 34px;
+    border: 1px solid #f1c40f;
+    border-right: none;
+    user-select: none;
+}
+
+.form_radio_group .form_radio_group-item:first-child label {
+    border-radius: 6px 0 0 6px;
+}
+.form_radio_group .form_radio_group-item:last-child label {
+    border-radius: 0 6px 6px 0;
+    border-right: 1px solid #f1c40f;
+}
+
+/* Checked */
+.form_radio_group input[type=radio]:checked + label {
+    background: #f1c40f;
+    color: #1b2631;
+}
+
+/* Hover */
+.form_radio_group label:hover {
+    color: white;
 }
