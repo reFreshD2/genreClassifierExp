@@ -30,7 +30,7 @@ class UploadService
         if ($this->audioFileRepository->findOneBy(['hash' => $hash])) {
             return null;
         }
-        $name = sha1($file->getClientOriginalName() . 'fmdksnkfsfFASdf');
+        $name = md5($file->getClientOriginalName() . 'fmdksnkfsfFASdf');
         $audioFile = new AudioFile($this->uploadDir . $name . ".wav", $hash);
         $file->move($this->uploadDir, "$name.wav");
         $this->audioFileRepository->save($audioFile);
