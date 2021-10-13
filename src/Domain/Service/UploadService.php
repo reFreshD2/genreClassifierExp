@@ -26,11 +26,11 @@ class UploadService
      * @throws ORMException
      */
     public function upload(UploadedFile $file): ?AudioFile {
-        $hash = sha1($file->getContent());
+        $hash = md5($file->getContent());
         if ($this->audioFileRepository->findOneBy(['hash' => $hash])) {
             return null;
         }
-        $name = md5($file->getClientOriginalName() . 'fmdksnkfsfFASdf');
+        $name = md5($file->getClientOriginalName() . 'Md5F47wn53eoZ3d');
         $audioFile = new AudioFile($this->uploadDir . $name . ".wav", $hash);
         $file->move($this->uploadDir, "$name.wav");
         $this->audioFileRepository->save($audioFile);
