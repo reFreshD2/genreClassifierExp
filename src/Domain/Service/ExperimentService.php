@@ -4,7 +4,7 @@ namespace Genre\Domain\Service;
 
 class ExperimentService
 {
-    private const PYTHON_PATH = '/usr/genre/python/';
+    private const PYTHON_PATH = '/var/www/genre/python/';
 
     public function getExperimentResult(array $params): array
     {
@@ -31,7 +31,7 @@ class ExperimentService
             'Точность' => $result['quality']['Средняя точность'],
             'Полнота' => $result['quality']['Средняя полнота'],
         ];
-        $result['F-score'] = $result['quality']['Fмера'];
+        $result['Fscore'] = $result['quality']['F-мера'];
         unset(
             $result['quality']['Средняя точность'],
             $result['quality']['Средняя полнота'],
